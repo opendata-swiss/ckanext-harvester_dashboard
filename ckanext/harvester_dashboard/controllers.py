@@ -17,8 +17,6 @@ class HarvesterDashboardController(BaseController):
                    'auth_user_obj': c.userobj}
         c.harvest_source_infos = tk.get_action('get_harvest_source_infos_for_user')(context, {})  # noqa
 
-        c.package = tk.get_action('package_show')(context, {'id': 'kof-beschaftigungsindikator'})
-
         return render('harvester_dashboard/list.html')
 
 

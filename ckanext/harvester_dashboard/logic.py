@@ -58,8 +58,9 @@ def get_harvest_source_dict():
     harvest_sources = model.Session.query(HarvestSource).filter(HarvestSource.active == True).all()  # noqa
     return {source.id: source for source in harvest_sources}
 
+
 def get_harvest_organizations_for_user(context, data_dict):
-    """gets all organizations whaere user can administer the harvesters"""
+    """gets all organizations where user can administer the harvesters"""
     organizations_for_user = tk.get_action('organization_list_for_user')(context, data_dict)  # noqa
     organization_dict_by_id = {}
     for organization in organizations_for_user:
@@ -69,6 +70,7 @@ def get_harvest_organizations_for_user(context, data_dict):
                 'title': organization['title']
             }
     return organization_dict_by_id
+
 
 def get_harvest_source_infos_for_user(context, data_dict):
     """get harvest source infos for display to a user
