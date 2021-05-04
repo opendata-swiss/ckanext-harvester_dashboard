@@ -21,7 +21,7 @@
       {% set source_url = h.url_for('harvest_admin', id=source_name.name) %}
       {% set organization_url = h.url_for('organization_read', action='read', id=organization.name) %}
       <h3><a href="{{ source_url }}">{{ source.title }}</a></h3>
-      <p><a href="{{ organization_url }}">{{ h.get_localized_value_for_display(organization.title) }}
+      <p><a href="{{ organization_url }}">{{ h.harvester_dashboard_organization_title(organization.title) }}
       </a></p>
       {% if job %}
         {% snippet "snippets/job_details.html", job=job %}
