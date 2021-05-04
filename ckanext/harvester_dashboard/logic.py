@@ -75,8 +75,11 @@ def get_harvest_source_ids_for_user(context, harvest_source_ids):
     """check for which harvest source the current user has admin rights"""
     harvest_source_ids_for_user = []
     for source_id in harvest_source_ids:
-        if tk.check_access('harvest_source_update', context, {'id': source_id}):
+        try:
+            tk.check_access('harvest_source_update', context, {'id': source_id})
             harvest_source_ids_for_user.append(source_id)
+        except tk.NotAuthorized:
+            pass
     return harvest_source_ids_for_user
 
 
