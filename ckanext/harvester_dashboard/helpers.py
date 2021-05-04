@@ -16,7 +16,6 @@ def get_localized_value_from_language_dict(value):
         if localized_value:
             return localized_value
         locales = tk.config.get('ckan.locales_offered')
-        log.error(locales)
         if locales:
             for locale in locales:
                 if value.get(locale):
