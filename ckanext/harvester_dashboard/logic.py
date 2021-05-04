@@ -59,17 +59,25 @@ def get_harvest_source_dict():
     return {source.id: source for source in harvest_sources}
 
 
-def get_harvest_organizations_for_user(context, data_dict):
-    """gets all organizations where user can administer the harvesters"""
-    organizations_for_user = tk.get_action('organization_list_for_user')(context, data_dict)  # noqa
-    organization_dict_by_id = {}
-    for organization in organizations_for_user:
-        if organization.get('capacity') in ['admin', 'editor']:
-            organization_dict_by_id[organization['id']] = {
-                'name': organization['name'],
-                'title': organization['title']
-            }
-    return organization_dict_by_id
+def get_organizations_id_dict():
+    """get organizations with ids and title"""
+    organizations = model.Session.query(model.Group)\
+                                 .filter(model.Group.state == 'active')\
+                                 .filter(model.Group.type == 'organization')\
+                                 .all()
+    organization_dict = {organization.id: OrganizationInfo(name=organization.name,
+                                                           title=organization.title)  # noqa
+                         for organization in organizations}
+    return organization_dict
+
+
+def get_harvest_source_ids_for_user(context, harvest_source_ids):
+    """check for which harvest source the current user has admin rights"""
+    harvest_source_ids_for_user = []
+    for source_id in harvest_source_ids:
+        if tk.check_access('harvest_source_update', context, {'id': source_id}):
+            harvest_source_ids_for_user.append(source_id)
+    return harvest_source_ids_for_user
 
 
 def get_harvest_source_infos_for_user(context, data_dict):
@@ -79,18 +87,17 @@ def get_harvest_source_infos_for_user(context, data_dict):
     harvest_source_ids = harvest_source_dict.keys()
     harvest_source_name_dict = get_harvest_source_name_dict(harvest_source_ids)
     harvest_source_org_dict = get_organizations_for_harvest_sources(harvest_source_ids)
+    organization_dict = get_organizations_id_dict()
 
-    harvest_organizations_for_user_as_dict = get_harvest_organizations_for_user(context, data_dict)
-    organization_ids_for_user = harvest_organizations_for_user_as_dict.keys()
-    harvest_source_ids_for_user = [source_id for source_id in harvest_source_ids
-                                   if harvest_source_org_dict[source_id] in organization_ids_for_user]
+    harvest_source_ids_for_user = get_harvest_source_ids_for_user(context, harvest_source_ids)
+
     harvest_sources_last_job_dict = get_harvester_job_dict(context, data_dict, harvest_source_ids_for_user)
 
     harvest_source_infos = []
     for source_id, organization_id in harvest_source_org_dict.items():
         if source_id in harvest_source_ids_for_user:
             harvest_source_info = {
-                'organization': harvest_organizations_for_user_as_dict.get(organization_id),
+                'organization': organization_dict.get(organization_id),
                 'source': harvest_source_dict.get(source_id),
                 'job': harvest_sources_last_job_dict.get(source_id),
                 'source_name' : harvest_source_name_dict.get(source_id)
