@@ -9,9 +9,7 @@ log = logging.getLogger(__name__)
 
 
 class HarvesterDashboardController(BaseController):
-    """Override the user controller to allow custom user search
-    by organization and role.
-    """
+    """Controller for Harvester Dashboard Route"""
     def dashboard(self):
         context = {'user': c.user,
                    'auth_user_obj': c.userobj}

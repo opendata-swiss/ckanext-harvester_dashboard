@@ -41,7 +41,7 @@ class HarvesterDashboardPlugin(plugins.SingletonPlugin, DefaultTranslation):
         Provide template helper functions
         """
         return {
-            'harvester_dashboard_organization_titlw': harvester_dashboard_organization_title
+            'harvester_dashboard_organization_title': harvester_dashboard_organization_title
         }
 
     # IRouter
