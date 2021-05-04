@@ -1,0 +1,37 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _("Harvest sources") }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ _("Harvest Dashboard") }}</li>
+{% endblock %}
+
+{% block page_header %}
+{% endblock %}
+
+{% block primary_content_inner %}
+  <section class="module-content">
+    <h1>{{ _('Harvester Dashboard') }}</h1>
+    <p>Last Harvest Jobs ordered by start date</p>
+    {% for harvest_source_info in c.harvest_source_infos %}
+      {% set job = harvest_source_info.job.last_job %}
+      {% set organization = harvest_source_info.organization %}
+      {% set source = harvest_source_info.source %}
+      {% set source_name = harvest_source_info.source_name %}
+      {% set source_url = h.url_for('harvest_admin', id=source_name.name) %}
+      {% set organization_url = h.url_for('organization_read', action='read', id=organization.name) %}
+      <h3><a href="{{ source_url }}">{{ source.title }}</a></h3>
+      <p><a href="{{ organization_url }}">{{ h.get_localized_value_for_display(organization.title) }}
+      </a></p>
+      {% if job %}
+        {% snippet "snippets/job_details.html", job=job %}
+      {% else %}
+        <p class="empty">{{ _('No jobs yet for this source') }}</p>
+      {% endif %}
+    {% endfor %}
+  </section>
+{% endblock %}
+
+{% block secondary_content %}
+  {% snippet 'harvester_dashboard/snippets/helper.html' %}
+{% endblock %}

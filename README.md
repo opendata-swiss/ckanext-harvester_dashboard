@@ -10,8 +10,11 @@ harvester jobs for the harvesters a user has access to
 ## Purpose
 The extensions adds a named route: `harvester_dashboard` for displaying a harvester dashboard
 The harvester dashboard displays the latest harvester job for all harvesters that a user 
-is allowed to administer alog with links to the harvester-admin and the organization that 
-the harvester belongs to.
+is allowed to administer. (The user's adminstration rights are directly retrieved by 
+check_access on 'harvest_source_update'.)
+
+For each harvester job on the list links to the harvester-admin and the organization that 
+the harvester belongs to are provided.
 
 ## Setup
 
