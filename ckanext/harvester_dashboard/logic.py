@@ -44,6 +44,7 @@ def get_organizations_for_harvest_sources(harvest_source_ids):
     which sources a user has access to"""
     members = model.Session.query(model.Member) \
                            .filter(model.Member.capacity == 'organization')\
+                           .filter(model.Member.state == 'active') \
                            .filter(model.Member.table_name == 'package') \
                            .filter(model.Member.table_id.in_(harvest_source_ids))\
                            .all()  # noqa
