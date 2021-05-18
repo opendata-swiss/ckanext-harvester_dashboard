@@ -15,7 +15,7 @@ def get_localized_value_from_language_dict(value):
         localized_value = value.get(user_language)
         if localized_value:
             return localized_value
-        locales = tk.config.get('ckan.locales_offered')
+        locales = tk.config.get('ckan.locales_offered', None)
         if locales:
             for locale in locales.split(' '):
                 if value.get(locale):
