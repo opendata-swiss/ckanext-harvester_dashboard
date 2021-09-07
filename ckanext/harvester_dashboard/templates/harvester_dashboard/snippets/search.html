@@ -1,0 +1,46 @@
+{% import 'macros/form.html' as form %}
+
+<section class="module module-narrow module-shallow simple-input">
+  {{ c.user_roles }}
+  <h2 class="module-heading">{{ _('Harvesters') }}</h2>
+  <form id="user-search-form"
+        class="module-content field-bordered"
+        action="{% url_for('harvester_dashboard') %}"
+        method="get">
+    <div class="field">
+      <label for="field-harvester-search">{{ _('Search Harvesters') }}</label>
+      <input id="ogdch_user_search"
+             value="{{ c.q }}"
+             class="field form-control"
+             name="q"
+             autocomplete="off"
+             placeholder="{{ _('Search') }}" />
+      <button class="btn-search" id="ogdch_user_search_button"
+             type="submit">
+             <i class="fa fa-search"></i>
+      </button>
+    </div>
+    <br>
+    <div class="field">
+      {% set format_attrs = {'data-module': 'autocomplete'} %}
+      {{ form.select('source_type', label=_('Harvest Source Type'),
+         options=c.source_type_options, selected=c.source_type, error='',
+         attrs=format_attrs, is_required=false) }}
+    </div>
+    <div class="field">
+      {% set format_attrs = {'data-module': 'autocomplete'} %}
+      {{ form.select('job_result', label=_('Job Result'),
+         options=c.job_result_options, selected=c.job_result, error='',
+         attrs=format_attrs, is_required=false) }}
+    </div>
+    <div class="field">
+      {% set format_attrs = {'data-module': 'autocomplete'} %}
+      {{ form.select('job_run', label=_('Job Run'),
+         options=c.job_run_options, selected=c.job_run, error='',
+         attrs=format_attrs, is_required=false) }}
+    </div>
+    <div class="reset-search">
+      <a href="{% url_for('harvester_dashboard') %}"><i class="fa fa-times-circle" aria-hidden="true"></i> {{ _('Reset search') }}</a>
+    </div>
+  </form>
+</section>

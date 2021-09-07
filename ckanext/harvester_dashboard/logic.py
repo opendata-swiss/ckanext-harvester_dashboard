@@ -4,7 +4,13 @@ import logging
 from collections import namedtuple, defaultdict
 from ckan import authz, model
 import ckan.plugins.toolkit as tk
-from ckanext.harvest.model import HarvestJob, HarvestSource
+
+from ckan.logic import NotFound, check_access, side_effect_free
+
+from ckanext.harvest import model as harvest_model
+
+from ckanext.harvest.model import (HarvestSource, HarvestJob, HarvestObject, HarvestLog)
+
 
 HarvestSourceInfo = namedtuple('HarvestSourceInfo', ['organization'])
 OrganizationInfo = namedtuple('OrganizationInfo', ['name', 'title'])
@@ -16,16 +22,17 @@ log = logging.getLogger(__name__)
 
 def get_harvester_job_dict(context, data_dict, harvest_source_ids_for_user):
     """get latest harvest jobs for each harvest source the user has access to"""
-    harvest_jobs = tk.get_action('harvest_job_list')( {'ignore_auth': True}, {})
+    harvest_jobs = tk.get_action('harvest_job_list')({'ignore_auth': True}, {})
     last_harvest_job_dict = defaultdict(lambda:None)
     for harvest_job in harvest_jobs:
         source_id = harvest_job['source_id']
         user_filter = source_id in harvest_source_ids_for_user
         job_not_set_filter = not last_harvest_job_dict.get(source_id)
         if user_filter and job_not_set_filter:
-            last_harvest_job_dict[harvest_job['source_id']] = HarvestJobInfo(
-                last_job=harvest_job
-            )
+            last_harvest_job_id = harvest_job['id']
+            harvest_job_result = tk.get_action('harvest_job_show')({'ignore_auth': True}, {'id': last_harvest_job_id})
+            last_harvest_job_dict[harvest_job['source_id']] = \
+                HarvestJobInfo(last_job=harvest_job_result)
     return last_harvest_job_dict
 
 
