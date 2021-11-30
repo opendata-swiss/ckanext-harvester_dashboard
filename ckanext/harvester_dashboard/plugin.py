@@ -4,7 +4,8 @@ import ckan.plugins as plugins
 from ckan.lib.plugins import DefaultTranslation
 import ckan.plugins.toolkit as toolkit
 from ckanext.harvester_dashboard import logic as harvester_dashboard_logic
-from ckanext.harvester_dashboard.helpers import harvester_dashboard_organization_title
+from ckanext.harvester_dashboard.helpers import (
+    harvester_dashboard_organization_title)
 import logging
 log = logging.getLogger(__name__)
 
@@ -31,7 +32,8 @@ class HarvesterDashboardPlugin(plugins.SingletonPlugin, DefaultTranslation):
         Expose new API methods
         """
         return {
-            'get_harvest_source_infos_for_user': harvester_dashboard_logic.get_harvest_source_infos_for_user
+            'get_harvest_source_infos_for_user':
+                harvester_dashboard_logic.get_harvest_source_infos_for_user
         }
 
     # ITemplateHelpers
@@ -41,7 +43,8 @@ class HarvesterDashboardPlugin(plugins.SingletonPlugin, DefaultTranslation):
         Provide template helper functions
         """
         return {
-            'harvester_dashboard_organization_title': harvester_dashboard_organization_title
+            'harvester_dashboard_organization_title':
+                harvester_dashboard_organization_title
         }
 
     # IRouter
