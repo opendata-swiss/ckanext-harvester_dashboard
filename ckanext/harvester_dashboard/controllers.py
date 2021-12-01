@@ -135,7 +135,8 @@ def _job_run_test(harvest_source_info, job_run):
 def _get_source_type_options(harvest_source_list):
     source_types = set([info.get('source').type
                         for info in harvest_source_list])
-    source_type_options = [{'text': _('Source Type: all'), 'value': RESULT_ALL}]
+    source_type_options = [{'text': _('Source Type: all'),
+                            'value': RESULT_ALL}]
     source_type_options.extend([{'text': type, 'value': type}
                                 for type in source_types])
     return source_type_options
