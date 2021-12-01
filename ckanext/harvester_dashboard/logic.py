@@ -25,8 +25,12 @@ def get_harvester_job_dict(context, data_dict, harvest_source_ids_for_user):
         user_filter = source_id in harvest_source_ids_for_user
         job_not_set_filter = not last_harvest_job_dict.get(source_id)
         if user_filter and job_not_set_filter:
+            last_harvest_job_id = harvest_job['id']
+            harvest_job_result = \
+                tk.get_action('harvest_job_show')({'ignore_auth': True},
+                                                  {'id': last_harvest_job_id})
             last_harvest_job_dict[harvest_job['source_id']] = \
-                HarvestJobInfo(last_job=harvest_job)
+                HarvestJobInfo(last_job=harvest_job_result)
     return last_harvest_job_dict
 
 
