@@ -22,7 +22,7 @@ RESULT_OPTIONS = [{'text': _('Results: all results'),
                    'value': RESULT_NO_UPDATES},
                   {'text': _('Results: okay'),
                    'value': RESULT_OK}]
-RUN_OPTIONS = [{'text': _('Run: all'), 'value': 'all'},
+RUN_OPTIONS = [{'text': _('Run: all'), 'value': RESULT_ALL},
                {'text': _('Run: finished'), 'value': 'Finished'},
                {'text': _('Run: running'), 'value': 'Running'},
                {'text': _('Run: current'), 'value': 'Current'}]
@@ -32,9 +32,9 @@ class HarvesterDashboardController(BaseController):
     """Controller for Harvester Dashboard Route"""
     def dashboard(self):
         c.q = request.params.get('q', '')
-        c.source_type = request.params.get('source_type', 'all')
-        c.job_result = request.params.get('job_result', 'all')
-        c.job_run = request.params.get('job_run', 'all')
+        c.source_type = request.params.get('source_type', RESULT_ALL)
+        c.job_result = request.params.get('job_result', RESULT_ALL)
+        c.job_run = request.params.get('job_run', RESULT_ALL)
         context = {'user': c.user,
                    'auth_user_obj': c.userobj}
         harvest_source_list = tk.get_action('get_harvest_source_infos_for_user')(context, {})  # noqa
@@ -67,7 +67,7 @@ class HarvesterDashboardController(BaseController):
 
 
 def _source_type_test(harvest_source_info, source_type):
-    if source_type == 'all':
+    if source_type == RESULT_ALL:
         return True
     source_type_match = harvest_source_info.get('source')\
         and harvest_source_info.get('source').type == source_type
@@ -120,7 +120,7 @@ def _job_result_test(harvest_source_info, job_result):
 
 
 def _job_run_test(harvest_source_info, job_run):
-    if job_run == 'all':
+    if job_run == RESULT_ALL:
         return True
     job = harvest_source_info.get('job')
     if job:
@@ -135,7 +135,7 @@ def _job_run_test(harvest_source_info, job_run):
 def _get_source_type_options(harvest_source_list):
     source_types = set([info.get('source').type
                         for info in harvest_source_list])
-    source_type_options = [{'text': _('Source Type: all'), 'value': 'all'}]
+    source_type_options = [{'text': _('Source Type: all'), 'value': RESULT_ALL}]
     source_type_options.extend([{'text': type, 'value': type}
                                 for type in source_types])
     return source_type_options
