@@ -85,10 +85,10 @@ def get_harvest_source_ids_for_user(context, harvest_source_ids):
     """check for which harvest source the current user has admin rights"""
     harvest_source_ids_for_user = []
     for source_id in harvest_source_ids:
-        log.debug("Processing a harvest source id: %s", source_id)
+        log.info("Processing a harvest source id: %s", source_id)
         model = context.get('model')
         pkg = model.Package.get(source_id)
-        log.debug("Get package using a harvest source id: %s", pkg)
+        log.info("Get package using a harvest source id: %s", pkg)
 
         try:
             tk.check_access('harvest_source_update',
