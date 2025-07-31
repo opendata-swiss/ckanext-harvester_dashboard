@@ -1,11 +1,13 @@
 # encoding: utf-8
 
 import logging
-from ckan.lib.base import BaseController, render
-from ckan.common import c, request, _
+
 import ckan.plugins.toolkit as tk
-from ckanext.harvester_dashboard.helpers import \
-    harvester_dashboard_organization_title
+from ckan.common import _, c, request
+from ckan.lib.base import BaseController, render
+
+from ckanext.harvester_dashboard.helpers import harvester_dashboard_organization_title
+
 log = logging.getLogger(__name__)
 RESULT_GATHER_ERRORS = 'gather-errors'
 RESULT_IMPORT_ERRORS = 'import-errors'

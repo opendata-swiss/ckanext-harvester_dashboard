@@ -1,12 +1,14 @@
 # coding=UTF-8
 
-import ckan.plugins as plugins
-from ckan.lib.plugins import DefaultTranslation
-import ckan.plugins.toolkit as toolkit
-from ckanext.harvester_dashboard import logic as harvester_dashboard_logic
-from ckanext.harvester_dashboard.helpers import (
-    harvester_dashboard_organization_title)
 import logging
+
+import ckan.plugins as plugins
+import ckan.plugins.toolkit as toolkit
+from ckan.lib.plugins import DefaultTranslation
+
+from ckanext.harvester_dashboard import logic as harvester_dashboard_logic
+from ckanext.harvester_dashboard.helpers import harvester_dashboard_organization_title
+
 log = logging.getLogger(__name__)
 
 

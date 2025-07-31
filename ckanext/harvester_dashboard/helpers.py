@@ -1,9 +1,10 @@
 # encoding: utf-8
 
-import logging
 import json
-from ckan.lib.helpers import lang
+import logging
+
 import ckan.plugins.toolkit as tk
+from ckan.lib.helpers import lang
 
 log = logging.getLogger(__name__)
 

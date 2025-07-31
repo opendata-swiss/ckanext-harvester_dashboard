@@ -1,9 +1,11 @@
 # coding=UTF-8
 
 import logging
-from collections import namedtuple, defaultdict
-from ckan import model
+from collections import defaultdict, namedtuple
+
 import ckan.plugins.toolkit as tk
+from ckan import model
+
 from ckanext.harvest.model import HarvestSource
 
 HarvestSourceInfo = namedtuple('HarvestSourceInfo', ['organization'])
