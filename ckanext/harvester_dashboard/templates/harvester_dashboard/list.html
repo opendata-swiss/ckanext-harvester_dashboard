@@ -23,8 +23,8 @@
       {% set organization = harvest_source_info.organization %}
       {% set source = harvest_source_info.source %}
       {% set source_name = harvest_source_info.source_name %}
-      {% set source_url = h.url_for('harvester_admin', id=source_name.name) %}
-      {% set organization_url = h.url_for('organization_read', action='read', id=organization.name) %}
+      {% set source_url = h.url_for('harvest.read', id=source.name) %}
+      {% set organization_url = h.url_for('organization.read', id=organization.name) %}
       <h3><a href="{{ source_url }}">Harvester Name: {{ source.title }}</a></h3>
       <p><a href="{{ organization_url }}">Organization: {{ h.harvester_dashboard_organization_title(organization.title) }}</a><br>
       Harvester Type: {{ source.type }}</p>
