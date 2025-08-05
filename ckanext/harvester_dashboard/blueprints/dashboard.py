@@ -42,25 +42,25 @@ def dashboard():
     c.source_type_options = _get_source_type_options(harvest_source_list)
     c.job_result_options = RESULT_OPTIONS
     c.job_run_options = RUN_OPTIONS
-    harvest_source_list = filter(
+    harvest_source_list = list(filter(
         lambda harvest_source_info: _source_type_test(
             harvest_source_info, c.source_type
         ),
         harvest_source_list,
-    )
-    harvest_source_list = filter(
+    ))
+    harvest_source_list = list(filter(
         lambda harvest_source_info: _job_result_test(harvest_source_info, c.job_result),
         harvest_source_list,
-    )
-    harvest_source_list = filter(
+    ))
+    harvest_source_list = list(filter(
         lambda harvest_source_info: _job_run_test(harvest_source_info, c.job_run),
         harvest_source_list,
-    )
+    ))
     if c.q:
-        harvest_source_list = filter(
+        harvest_source_list = list(filter(
             lambda harvest_source_info: _source_name_test(harvest_source_info, c.q),
             harvest_source_list,
-        )
+        ))
     c.harvest_source_infos = harvest_source_list
     return render("harvester_dashboard/list.html")
 

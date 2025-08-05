@@ -97,11 +97,11 @@ def get_harvest_source_ids_for_user(context, harvest_source_ids):
     harvest_source_ids_for_user = []
     for source_id in harvest_source_ids:
         log.info("Processing a harvest source id: %s", source_id)
-        print("Processing a harvest source id: %s", source_id)
+        print(("Processing a harvest source id: %s", source_id))
         model = context.get("model")
         pkg = model.Package.get(source_id)
         log.info("Get package using a harvest source id: %s", pkg)
-        print("Get package using a harvest source id: %s", pkg)
+        print(("Get package using a harvest source id: %s", pkg))
 
         try:
             tk.check_access("harvest_source_update", context, {"id": source_id})
@@ -114,7 +114,7 @@ def get_harvest_source_ids_for_user(context, harvest_source_ids):
 def get_harvest_source_infos_for_user(context, data_dict):
     """get harvest source infos for display to a user"""
     harvest_source_dict = get_harvest_source_dict()
-    harvest_source_ids = harvest_source_dict.keys()
+    harvest_source_ids = list(harvest_source_dict.keys())
     harvest_source_name_dict = get_harvest_source_name_dict(harvest_source_ids)
     harvest_source_org_dict = get_organizations_for_harvest_sources(harvest_source_ids)
     organization_dict = get_organizations_id_dict()
@@ -128,7 +128,7 @@ def get_harvest_source_infos_for_user(context, data_dict):
     )
 
     harvest_source_infos = []
-    for source_id, organization_id in harvest_source_org_dict.items():
+    for source_id, organization_id in list(harvest_source_org_dict.items()):
         if source_id in harvest_source_ids_for_user:
             harvest_source_info = {
                 "organization": organization_dict.get(organization_id),
