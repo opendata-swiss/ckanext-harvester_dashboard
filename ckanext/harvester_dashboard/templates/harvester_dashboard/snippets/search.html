@@ -5,7 +5,7 @@
   <h2 class="module-heading">{{ _('Harvesters') }}</h2>
   <form id="user-search-form"
         class="module-content field-bordered"
-        action="{% url_for('harvester_dashboard') %}"
+        action="{% url_for('harvester_dashboard.dashboard') %}"
         method="get">
     <div class="field">
       <label for="field-harvester-search">{{ _('Search Harvesters') }}</label>
@@ -40,7 +40,7 @@
          attrs=format_attrs, is_required=false) }}
     </div>
     <div class="reset-search">
-      <a href="{% url_for('harvester_dashboard') %}"><i class="fa fa-times-circle" aria-hidden="true"></i> {{ _('Reset search') }}</a>
+      <a href="{% url_for('harvester_dashboard.dashboard') %}"><i class="fa fa-times-circle" aria-hidden="true"></i> {{ _('Reset search') }}</a>
     </div>
   </form>
 </section>

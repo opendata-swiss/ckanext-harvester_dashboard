@@ -7,6 +7,7 @@ import ckan.plugins.toolkit as toolkit
 from ckan.lib.plugins import DefaultTranslation
 
 from ckanext.harvester_dashboard import logic as harvester_dashboard_logic
+from ckanext.harvester_dashboard.blueprints.dashboard import dashboard_blueprint
 from ckanext.harvester_dashboard.helpers import harvester_dashboard_organization_title
 
 log = logging.getLogger(__name__)
@@ -17,7 +18,13 @@ class HarvesterDashboardPlugin(plugins.SingletonPlugin, DefaultTranslation):
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.ITranslation)
-    plugins.implements(plugins.IRoutes, inherit=True)
+    plugins.implements(plugins.IBlueprint)
+
+    # IBlueprint
+
+    def get_blueprint(self):
+
+        return [dashboard_blueprint]
 
     # ITranslation
 
@@ -46,17 +53,3 @@ class HarvesterDashboardPlugin(plugins.SingletonPlugin, DefaultTranslation):
         return {
             "harvester_dashboard_organization_title": harvester_dashboard_organization_title
         }
-
-    # IRouter
-
-    def before_map(self, map):
-        """adding custom routes to the ckan mapping"""
-
-        map.connect(
-            "harvester_dashboard",
-            "/harvest-dashboard",
-            controller="ckanext.harvester_dashboard.controllers:HarvesterDashboardController",  # noqa
-            action="dashboard",
-        )
-
-        return map

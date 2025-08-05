@@ -4,7 +4,8 @@ import logging
 
 import ckan.plugins.toolkit as tk
 from ckan.common import _, c, request
-from ckan.lib.base import BaseController, render
+from ckan.lib.base import render
+from flask import Blueprint
 
 from ckanext.harvester_dashboard.helpers import harvester_dashboard_organization_title
 
@@ -29,44 +30,39 @@ RUN_OPTIONS = [
 ]
 
 
-class HarvesterDashboardController(BaseController):
-    """Controller for Harvester Dashboard Route"""
-
-    def dashboard(self):
-        c.q = request.params.get("q", "")
-        c.source_type = request.params.get("source_type", RESULT_ALL)
-        c.job_result = request.params.get("job_result", RESULT_ALL)
-        c.job_run = request.params.get("job_run", RESULT_ALL)
-        context = {"user": c.user, "auth_user_obj": c.userobj}
-        harvest_source_list = tk.get_action("get_harvest_source_infos_for_user")(
-            context, {}
-        )  # noqa
-        c.source_type_options = _get_source_type_options(harvest_source_list)
-        c.job_result_options = RESULT_OPTIONS
-        c.job_run_options = RUN_OPTIONS
+def dashboard():
+    c.q = request.params.get("q", "")
+    c.source_type = request.params.get("source_type", RESULT_ALL)
+    c.job_result = request.params.get("job_result", RESULT_ALL)
+    c.job_run = request.params.get("job_run", RESULT_ALL)
+    context = {"user": c.user, "auth_user_obj": c.userobj}
+    harvest_source_list = tk.get_action("get_harvest_source_infos_for_user")(
+        context, {}
+    )  # noqa
+    c.source_type_options = _get_source_type_options(harvest_source_list)
+    c.job_result_options = RESULT_OPTIONS
+    c.job_run_options = RUN_OPTIONS
+    harvest_source_list = filter(
+        lambda harvest_source_info: _source_type_test(
+            harvest_source_info, c.source_type
+        ),
+        harvest_source_list,
+    )
+    harvest_source_list = filter(
+        lambda harvest_source_info: _job_result_test(harvest_source_info, c.job_result),
+        harvest_source_list,
+    )
+    harvest_source_list = filter(
+        lambda harvest_source_info: _job_run_test(harvest_source_info, c.job_run),
+        harvest_source_list,
+    )
+    if c.q:
         harvest_source_list = filter(
-            lambda harvest_source_info: _source_type_test(
-                harvest_source_info, c.source_type
-            ),
+            lambda harvest_source_info: _source_name_test(harvest_source_info, c.q),
             harvest_source_list,
         )
-        harvest_source_list = filter(
-            lambda harvest_source_info: _job_result_test(
-                harvest_source_info, c.job_result
-            ),
-            harvest_source_list,
-        )
-        harvest_source_list = filter(
-            lambda harvest_source_info: _job_run_test(harvest_source_info, c.job_run),
-            harvest_source_list,
-        )
-        if c.q:
-            harvest_source_list = filter(
-                lambda harvest_source_info: _source_name_test(harvest_source_info, c.q),
-                harvest_source_list,
-            )
-        c.harvest_source_infos = harvest_source_list
-        return render("harvester_dashboard/list.html")
+    c.harvest_source_infos = harvest_source_list
+    return render("harvester_dashboard/list.html")
 
 
 def _source_type_test(harvest_source_info, source_type):
@@ -144,3 +140,11 @@ def _get_source_type_options(harvest_source_list):
     source_type_options = [{"text": _("Source Type: all"), "value": RESULT_ALL}]
     source_type_options.extend([{"text": type, "value": type} for type in source_types])
     return source_type_options
+
+
+dashboard_blueprint = Blueprint(
+    "harvester_dashboard",
+    __name__,
+    url_prefix="/harvest-dashboard",
+)
+dashboard_blueprint.add_url_rule("/", view_func=dashboard, strict_slashes=False)
