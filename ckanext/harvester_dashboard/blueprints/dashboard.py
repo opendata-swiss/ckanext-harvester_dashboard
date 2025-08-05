@@ -1,8 +1,10 @@
 import logging
+from typing import Any
 
 import ckan.plugins.toolkit as tk
-from ckan.common import _, c, request
+from ckan.common import _, current_user, request
 from ckan.lib.base import render
+from ckan.types import Context
 from flask import Blueprint
 
 from ckanext.harvester_dashboard.helpers import harvester_dashboard_organization_title
@@ -29,21 +31,27 @@ RUN_OPTIONS = [
 
 
 def dashboard():
-    c.q = request.params.get("q", "")
-    c.source_type = request.params.get("source_type", RESULT_ALL)
-    c.job_result = request.params.get("job_result", RESULT_ALL)
-    c.job_run = request.params.get("job_run", RESULT_ALL)
-    context = {"user": c.user, "auth_user_obj": c.userobj}
+    context: Context = {
+        "user": current_user.name,
+        "auth_user_obj": current_user,
+    }
     harvest_source_list = tk.get_action("get_harvest_source_infos_for_user")(
         context, {}
-    )  # noqa
-    c.source_type_options = _get_source_type_options(harvest_source_list)
-    c.job_result_options = RESULT_OPTIONS
-    c.job_run_options = RUN_OPTIONS
+    )
+    extra_vars: dict[str, Any] = {
+        "q": request.params.get("q", ""),
+        "source_type": request.params.get("source_type", RESULT_ALL),
+        "job_result": request.params.get("job_result", RESULT_ALL),
+        "job_run": request.params.get("job_run", RESULT_ALL),
+        "source_type_options": _get_source_type_options(harvest_source_list),
+        "job_result_options": RESULT_OPTIONS,
+        "job_run_options": RUN_OPTIONS,
+        "harvest_source_infos": harvest_source_list,
+    }
     harvest_source_list = list(
         filter(
             lambda harvest_source_info: _source_type_test(
-                harvest_source_info, c.source_type
+                harvest_source_info, extra_vars["source_type"]
             ),
             harvest_source_list,
         )
@@ -51,26 +59,31 @@ def dashboard():
     harvest_source_list = list(
         filter(
             lambda harvest_source_info: _job_result_test(
-                harvest_source_info, c.job_result
+                harvest_source_info, extra_vars["job_result"]
             ),
             harvest_source_list,
         )
     )
     harvest_source_list = list(
         filter(
-            lambda harvest_source_info: _job_run_test(harvest_source_info, c.job_run),
+            lambda harvest_source_info: _job_run_test(
+                harvest_source_info, extra_vars["job_run"]
+            ),
             harvest_source_list,
         )
     )
-    if c.q:
+    if extra_vars.get("q"):
         harvest_source_list = list(
             filter(
-                lambda harvest_source_info: _source_name_test(harvest_source_info, c.q),
+                lambda harvest_source_info: _source_name_test(
+                    harvest_source_info, extra_vars["q"]
+                ),
                 harvest_source_list,
             )
         )
-    c.harvest_source_infos = harvest_source_list
-    return render("harvester_dashboard/list.html")
+    extra_vars["harvest_source_infos"] = harvest_source_list
+
+    return render("harvester_dashboard/list.html", extra_vars)
 
 
 def _source_type_test(harvest_source_info, source_type):
