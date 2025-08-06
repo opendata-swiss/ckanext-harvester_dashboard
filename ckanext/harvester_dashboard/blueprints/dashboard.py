@@ -39,10 +39,10 @@ def dashboard():
         context, {}
     )
     extra_vars: dict[str, Any] = {
-        "q": request.params.get("q", ""),
-        "source_type": request.params.get("source_type", RESULT_ALL),
-        "job_result": request.params.get("job_result", RESULT_ALL),
-        "job_run": request.params.get("job_run", RESULT_ALL),
+        "q": request.args.get("q", ""),
+        "source_type": request.args.get("source_type", RESULT_ALL),
+        "job_result": request.args.get("job_result", RESULT_ALL),
+        "job_run": request.args.get("job_run", RESULT_ALL),
         "source_type_options": _get_source_type_options(harvest_source_list),
         "job_result_options": RESULT_OPTIONS,
         "job_run_options": RUN_OPTIONS,
