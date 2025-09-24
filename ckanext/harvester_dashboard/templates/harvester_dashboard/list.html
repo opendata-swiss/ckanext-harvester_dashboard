@@ -30,7 +30,7 @@
       Harvester Type: {{ source.type }}</p>
       {% if job and (job.gather_error_summary or job.object_error_summary) %}
         <p>
-          <a href="{{ h.url_for('harvest_job_show', source=source.id, id=job.id) }}">
+          <a href="{{ h.url_for('harvester.job_show', source=source.id, id=job.id) }}">
           Error-Summary:
           {% if job.gather_error_summary %}
             gather errors: {{ job.gather_error_summary |length }}
