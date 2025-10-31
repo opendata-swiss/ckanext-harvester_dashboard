@@ -35,9 +35,7 @@ class HarvesterDashboardPlugin(plugins.SingletonPlugin, DefaultTranslation):
         toolkit.add_template_directory(config_, "templates")
 
     def get_actions(self):
-        """
-        Expose new API methods
-        """
+        """Expose new API methods."""
         return {
             "get_harvest_source_infos_for_user": harvester_dashboard_logic.get_harvest_source_infos_for_user
         }
@@ -45,9 +43,7 @@ class HarvesterDashboardPlugin(plugins.SingletonPlugin, DefaultTranslation):
     # ITemplateHelpers
 
     def get_helpers(self):
-        """
-        Provide template helper functions
-        """
+        """Provide template helper functions."""
         return {
             "harvester_dashboard_organization_title": harvester_dashboard_organization_title
         }
