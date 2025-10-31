@@ -1,5 +1,3 @@
-# coding=UTF-8
-
 import logging
 from collections import defaultdict, namedtuple
 
@@ -17,8 +15,7 @@ log = logging.getLogger(__name__)
 
 
 def get_harvester_job_dict(context, data_dict, harvest_source_ids_for_user):
-    """get latest harvest jobs for each harvest source
-    the user has access to"""
+    """Get latest harvest jobs for each harvest source the user has access to."""
     harvest_jobs = tk.get_action("harvest_job_list")({"ignore_auth": True}, {})
     last_harvest_job_dict = defaultdict(lambda: None)
     for harvest_job in harvest_jobs:
@@ -37,8 +34,9 @@ def get_harvester_job_dict(context, data_dict, harvest_source_ids_for_user):
 
 
 def get_harvest_source_name_dict(harvest_source_ids):
-    """get package names for harvest sources, so that
-    urls to the harvesters can be added"""
+    """Get package names for harvest sources, so that urls to the harvesters can be
+    added.
+    """
     packages = (
         model.Session.query(model.Package)
         .filter(model.Package.id.in_(harvest_source_ids))
@@ -51,8 +49,9 @@ def get_harvest_source_name_dict(harvest_source_ids):
 
 
 def get_organizations_for_harvest_sources(harvest_source_ids):
-    """gets organizations for harvest_sources, so that it can be decided to
-    which sources a user has access to"""
+    """Get organizations for harvest sources, to find out which harvest sources the user
+    has access to.
+    """
     members = (
         model.Session.query(model.Member)
         .filter(model.Member.capacity == "organization")
@@ -68,15 +67,15 @@ def get_organizations_for_harvest_sources(harvest_source_ids):
 
 
 def get_harvest_source_dict():
-    """gets all active harvest sources"""
+    """Get all active harvest sources."""
     harvest_sources = (
         model.Session.query(HarvestSource).filter(HarvestSource.active == True).all()
-    )  # noqa
+    )
     return {source.id: source for source in harvest_sources}
 
 
 def get_organizations_id_dict():
-    """get organizations with ids and title"""
+    """Get organizations with id and title."""
     organizations = (
         model.Session.query(model.Group)
         .filter(model.Group.state == "active")
@@ -93,7 +92,7 @@ def get_organizations_id_dict():
 
 
 def get_harvest_source_ids_for_user(context, harvest_source_ids):
-    """check for which harvest source the current user has admin rights"""
+    """Check for which harvest source the current user has admin rights."""
     harvest_source_ids_for_user = []
     for source_id in harvest_source_ids:
         log.info("Processing a harvest source id: %s", source_id)
@@ -112,7 +111,7 @@ def get_harvest_source_ids_for_user(context, harvest_source_ids):
 
 
 def get_harvest_source_infos_for_user(context, data_dict):
-    """get harvest source infos for display to a user"""
+    """Get harvest source infos for display to a user."""
     harvest_source_dict = get_harvest_source_dict()
     harvest_source_ids = list(harvest_source_dict.keys())
     harvest_source_name_dict = get_harvest_source_name_dict(harvest_source_ids)
