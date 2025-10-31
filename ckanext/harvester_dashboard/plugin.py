@@ -1,5 +1,3 @@
-# coding=UTF-8
-
 import logging
 
 import ckan.plugins as plugins
