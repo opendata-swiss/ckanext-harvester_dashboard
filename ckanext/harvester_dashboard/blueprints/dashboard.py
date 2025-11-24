@@ -109,7 +109,8 @@ def _source_name_test(harvest_source_info, q):
     return False
 
 
-def _job_result_test(harvest_source_info, job_result):
+def _job_result_test(harvest_source_info, job_result):  # noqa C901
+    # TODO: This function is too complex (flake8 says 11). Simplify it.
     if job_result == RESULT_ALL:
         return True
     job = harvest_source_info.get("job")
