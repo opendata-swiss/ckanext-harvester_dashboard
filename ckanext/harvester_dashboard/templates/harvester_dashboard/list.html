@@ -14,23 +14,23 @@
     <h1>{{ _('Harvester Dashboard') }}</h1>
     <p>Last Harvest Jobs filtered by:</p>
     <ul>
-      <li>Source type: {{ c.source_type }}</li>
-      <li>Job result: {{ c.job_result }}</li>
-      <li>Job run status: {{ c.job_run }}</li>
+      <li>Source type: {{ source_type }}</li>
+      <li>Job result: {{ job_result }}</li>
+      <li>Job run status: {{ job_run }}</li>
     </ul>
-    {% for harvest_source_info in c.harvest_source_infos %}
+    {% for harvest_source_info in harvest_source_infos %}
       {% set job = harvest_source_info.job.last_job %}
       {% set organization = harvest_source_info.organization %}
       {% set source = harvest_source_info.source %}
       {% set source_name = harvest_source_info.source_name %}
-      {% set source_url = h.url_for('harvest_admin', id=source_name.name) %}
-      {% set organization_url = h.url_for('organization_read', action='read', id=organization.name) %}
+      {% set source_url = h.url_for('harvest.read', id=source.id) %}
+      {% set organization_url = h.url_for('organization.read', id=organization.name) %}
       <h3><a href="{{ source_url }}">Harvester Name: {{ source.title }}</a></h3>
       <p><a href="{{ organization_url }}">Organization: {{ h.harvester_dashboard_organization_title(organization.title) }}</a><br>
       Harvester Type: {{ source.type }}</p>
       {% if job and (job.gather_error_summary or job.object_error_summary) %}
         <p>
-          <a href="{{ h.url_for('harvest_job_show', source=source.id, id=job.id) }}">
+          <a href="{{ h.url_for('harvester.job_show', source=source.id, id=job.id) }}">
           Error-Summary:
           {% if job.gather_error_summary %}
             gather errors: {{ job.gather_error_summary |length }}
@@ -52,5 +52,5 @@
 
 {% block secondary_content %}
   {% snippet 'harvester_dashboard/snippets/helper.html' %}
-  {% snippet 'harvester_dashboard/snippets/search.html' %}
+  {% snippet 'harvester_dashboard/snippets/search.html', source_type_options=source_type_options, job_result_options=job_result_options, job_run_options=job_run_options %}
 {% endblock %}

@@ -1,0 +1,44 @@
+[project]
+name = "ckanext-harvester_dashboard"
+version = "0.0.1"
+dynamic = ["optional-dependencies"]
+description = "Harvester Dashboard for opendata.swiss"
+authors = [
+    {name = "Liip AG", email = "ogdch@liip.ch"}
+]
+maintainers = [
+    {name = "Liip AG", email = "ogdch@liip.ch"}
+]
+license = {text = "AGPL"}
+classifiers = [
+    "Intended Audience :: Developers",
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+keywords = [
+    "CKAN",
+    "harvester",
+    "dashboard",
+]
+
+[project.urls]
+Documentation = "https://github.com/opendata-swiss/ckanext-harvester_dashboard"
+Repository = "https://github.com/opendata-swiss/ckanext-harvester_dashboard"
+Issues = "https://github.com/opendata-swiss/ckanext-harvester_dashboard/issues"
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+optional-dependencies = {dev = { file = ["dev-requirements.txt"] }}
+
+[tool.isort]
+profile = "black"
+
+[project.entry-points."ckan.plugins"]
+harvester_dashboard = "ckanext.harvester_dashboard.plugin:HarvesterDashboardPlugin"

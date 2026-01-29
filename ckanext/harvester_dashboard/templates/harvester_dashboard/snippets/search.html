@@ -1,16 +1,16 @@
 {% import 'macros/form.html' as form %}
 
 <section class="module module-narrow module-shallow simple-input">
-  {{ c.user_roles }}
+  {{ user_roles }}
   <h2 class="module-heading">{{ _('Harvesters') }}</h2>
   <form id="user-search-form"
         class="module-content field-bordered"
-        action="{% url_for('harvester_dashboard') %}"
+        action="{% url_for('harvester_dashboard.dashboard') %}"
         method="get">
     <div class="field">
       <label for="field-harvester-search">{{ _('Search Harvesters') }}</label>
       <input id="ogdch_user_search"
-             value="{{ c.q }}"
+             value="{{ q }}"
              class="field form-control"
              name="q"
              autocomplete="off"
@@ -24,23 +24,23 @@
     <div class="field">
       {% set format_attrs = {'data-module': 'autocomplete'} %}
       {{ form.select('source_type', label=_('Harvest Source Type'),
-         options=c.source_type_options, selected=c.source_type, error='',
+         options=source_type_options, selected=source_type, error='',
          attrs=format_attrs, is_required=false) }}
     </div>
     <div class="field">
       {% set format_attrs = {'data-module': 'autocomplete'} %}
       {{ form.select('job_result', label=_('Job Result'),
-         options=c.job_result_options, selected=c.job_result, error='',
+         options=job_result_options, selected=job_result, error='',
          attrs=format_attrs, is_required=false) }}
     </div>
     <div class="field">
       {% set format_attrs = {'data-module': 'autocomplete'} %}
       {{ form.select('job_run', label=_('Job Run'),
-         options=c.job_run_options, selected=c.job_run, error='',
+         options=job_run_options, selected=job_run, error='',
          attrs=format_attrs, is_required=false) }}
     </div>
     <div class="reset-search">
-      <a href="{% url_for('harvester_dashboard') %}"><i class="fa fa-times-circle" aria-hidden="true"></i> {{ _('Reset search') }}</a>
+      <a href="{% url_for('harvester_dashboard.dashboard') %}"><i class="fa fa-times-circle" aria-hidden="true"></i> {{ _('Reset search') }}</a>
     </div>
   </form>
 </section>
