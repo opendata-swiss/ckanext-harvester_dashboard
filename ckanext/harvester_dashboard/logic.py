@@ -49,21 +49,19 @@ def get_harvest_source_name_dict(harvest_source_ids):
 
 
 def get_organizations_for_harvest_sources(harvest_source_ids):
-    """Get organizations for harvest sources, to find out which harvest sources the user
+    """Map harvest source ids to organization ids to find out which harvest sources the user
     has access to.
     """
-    members = (
-        model.Session.query(model.Member)
-        .filter(model.Member.capacity == "organization")
-        .filter(model.Member.state == "active")
-        .filter(model.Member.table_name == "package")
-        .filter(model.Member.table_id.in_(harvest_source_ids))
+    if not harvest_source_ids:
+        return {}
+
+    packages = (
+        model.Session.query(model.Package.id, model.Package.owner_org)
+        .filter(model.Package.id.in_(harvest_source_ids))
+        .filter(model.Package.owner_org.isnot(None))
         .all()
     )
-    harvest_source_org_dict = {}
-    for member in members:
-        harvest_source_org_dict[member.table_id] = member.group_id
-    return harvest_source_org_dict
+    return {package_id: owner_org_id for package_id, owner_org_id in packages}
 
 
 def get_harvest_source_dict():
